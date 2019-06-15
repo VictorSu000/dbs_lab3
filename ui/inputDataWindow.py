@@ -2,11 +2,11 @@ from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QPushButton
 
 class InputDataWindow(QWidget):
-    def __init__(self, columns, presetData, okCallback, parent=None):
+    def __init__(self, columnsDefs, presetData, okCallback, parent=None):
         # okCallback 点击确认后的回调函数
 
         super(QWidget, self).__init__(parent)
-        self.columns = columns
+        self.columnsDefs = columnsDefs
         self.presetData = presetData
         self.okCallback = okCallback
         self.initUI()
@@ -15,7 +15,7 @@ class InputDataWindow(QWidget):
         grid = QGridLayout()
         grid.setSpacing(10)
 
-        inputs = [ (QLabel(column + ":"), QLineEdit(data)) for (column, data) in zip(self.columns, self.presetData)]
+        inputs = [ (QLabel(column["name"] + ":"), QLineEdit(data)) for (column, data) in zip(self.columnsDefs, self.presetData)]
         line = 1
         for input in inputs:
             grid.addWidget(input[0], line, 0)

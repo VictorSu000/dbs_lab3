@@ -62,7 +62,7 @@ def subbank_search(conditions):
         for con in conditions:
             sql += f"{con['name']} {con['condition']} and "
         
-        if sql[-4:] != "and":
+        if sql[-4:] != "and ":
             # 没有任何条件，去除最后的 "where "
             sql = sql[:-6]
         else:

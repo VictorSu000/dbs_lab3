@@ -3,32 +3,43 @@ from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QTableWidge
 
 from .inputDataWindow import InputDataWindow
 
+from .dataTypeConvert import convertToInitial, convertToText
+
 class SearchWindow(QWidget):
-    def __init__(self, parent=None, columns=()):
+    def __init__(self, columnDefs, searchFunc, updateFunc, deleteFunc, insertFunc, parent=None):
         super(QWidget, self).__init__(parent)
-        self.columns = columns
+        self.columnDefs = columnDefs
+        self.searchFunc = searchFunc
+        self.updateFunc = updateFunc
+        self.deleteFunc = deleteFunc
+        self.insertFunc = insertFunc
+        # pkIndexes 调用删除函数时，需要传的字段(一般是主键)在columnDefs中的下标
+        self.pkIndexes = [ index for index in range(len(columnDefs)) if columnDefs[index]["isPK"] ]
         self.initUI()
+        self.searchData()
 
     def initUI(self):
         grid = QGridLayout()
         grid.setSpacing(10)
 
         line = 1
-        for column in self.columns:
-            grid.addWidget(QLabel(column + ":"), line, 0)
-            grid.addWidget(QLineEdit(), line, 1)
+        self.searchInputs = []
+        for column in self.columnDefs:
+            grid.addWidget(QLabel(column["name"] + ":"), line, 0)
+            searchInputWidget = QLineEdit()
+            self.searchInputs.append(searchInputWidget)
+            grid.addWidget(searchInputWidget, line, 1)
             line += 1
 
         self.table = QTableWidget()
-        self.table.setColumnCount(len(self.columns))
-        self.table.setHorizontalHeaderLabels(self.columns)
+        self.table.setColumnCount(len(self.columnDefs))
+        self.table.setHorizontalHeaderLabels([ column["name"] for column in self.columnDefs ])
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         # 设置选择行为，以行为单位
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         # 设置选择模式，只选择单行
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.table.setFocusPolicy(Qt.NoFocus)
-        self.table.setSortingEnabled(True)   # 设置表头可以自动排序
 
         tableHeight = 5
         grid.addWidget(self.table, line, 0, tableHeight, 0)
@@ -38,32 +49,72 @@ class SearchWindow(QWidget):
         for i in range(len(buttons)):
             grid.addWidget(buttons[i], line, i + 2)
         
+        buttons[0].clicked.connect(self.searchData)
         buttons[1].clicked.connect(self.showAddWindow)
         buttons[2].clicked.connect(self.showModifyWindow)
         buttons[3].clicked.connect(self.deleteLine)
         self.setLayout(grid)
 
+    def searchData(self):
+        conditions = []
+        for index in range(len(self.searchInputs)):
+            name = self.columnDefs[index]["name"]
+            condition = self.searchInputs[index].text()
+            if condition != "":
+                conditions.append({
+                    "name": name,
+                    "condition": condition,
+                })
+        data = self.searchFunc(conditions)
+
+        self.table.clearContents()
+        self.table.setRowCount(len(data))
+        for row in range(len(data)):
+            for col in range(len(data[row])):
+                dataType = self.columnDefs[col]["type"]
+                self.table.setItem(row, col, QTableWidgetItem(convertToText[dataType](data[row][col])))
+
     def addLine(self, data):
-        # table中增加一行
+        # table中增加一行，数据库中对应也增加记录
         row = self.table.rowCount()
         self.table.setRowCount(row + 1)
         
         for i in range(len(data)):
             self.table.setItem(row, i, QTableWidgetItem(data[i]))
+            dataType = self.columnDefs[i]["type"]
+            data[i] = convertToInitial[dataType](data[i])
+        
+        self.insertFunc(data)
 
     def deleteLine(self):
         reply = QMessageBox.question(self, 'Message', '确定删除?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
+            data = []
+            for col in self.pkIndexes:
+                dataType = self.columnDefs[col]["type"]
+                data.append(convertToInitial[dataType](self.table.item(self.table.currentRow(), col).text()))
+            self.deleteFunc(data)
             self.table.removeRow(self.table.currentRow())
 
     def modifyData(self, modifyRow, data):
         for col in range(len(data)):
             self.table.item(modifyRow, col).setText(data[col])
 
+        dataToSend = []
+        for col in self.pkIndexes:
+            dataType = self.columnDefs[col]["type"]
+            dataToSend.append(convertToInitial[dataType](self.table.item(modifyRow, col).text()))
+
+        for col in range(len(data)):
+            dataType = self.columnDefs[col]["type"]
+            dataToSend.append(convertToInitial[dataType](data[col]))
+
+        self.updateFunc(dataToSend)
+
     def showAddWindow(self):
         # 展示 新增 窗口
-        self.addWindow = InputDataWindow(self.columns, ["" for tmp in self.columns], self.addLine)
+        self.addWindow = InputDataWindow(self.columnDefs, ["" for tmp in self.columnDefs], self.addLine)
         self.addWindow.show()
 
     def showModifyWindow(self):
@@ -72,5 +123,5 @@ class SearchWindow(QWidget):
         if currentRow < 0:
             return
         presetData = [self.table.item(currentRow, col).text() for col in range(self.table.columnCount())]
-        self.modifyWindow = InputDataWindow(self.columns, presetData, lambda data:self.modifyData(currentRow, data))
+        self.modifyWindow = InputDataWindow(self.columnDefs, presetData, lambda data:self.modifyData(currentRow, data))
         self.modifyWindow.show()
