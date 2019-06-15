@@ -5,6 +5,8 @@ from . import getDB
 def loan_add(data):
     r"""
     :param data: a tuple of data consists of all 贷款 columns
+    :sql param(IN 贷款号 varchar(20), IN 名字 varchar(20), IN 金额 decimal(15,2),
+    IN 状态 varchar(45), IN 负责人身份证号 varchar(18))
     """
     db = getDB()
 
@@ -44,6 +46,8 @@ def loan_delete(data):
 def fund_add(data):
     r"""
     :param data: a tuple of data consists of all 款项 columns and err code
+    :sql param(IN 款项号 varchar(10), IN 贷款号 varchar(20), IN 日期 DATE,
+    IN 金额 decimal(15,2), OUT err binary)
     """
     db = getDB()
 
@@ -66,6 +70,7 @@ def fund_add(data):
 def take_loan(data):
     r"""
     :param data: a tuple of data consists of all 借贷 columns
+    :sql param(IN 贷款号 varchar(20), IN 身份证号 varchar(18))
     """
     db = getDB()
 

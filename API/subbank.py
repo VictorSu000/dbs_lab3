@@ -4,7 +4,8 @@ from . import getDB
 
 def subbank_add(data):
     r"""
-            :param data: a tuple of data consists of all 支行 columns
+        :param data: a tuple of data consists of all 支行 columns
+        :sql param(IN 支行名 varchar(20), IN 所在城市 varchar(20), IN 资产 decimal(15,2))
     """
     db = getDB()
     try:
@@ -20,7 +21,7 @@ def subbank_add(data):
 
 def subbank_delete(data):
     r"""
-            :param data: a tuple of data just consists of subbank name
+        :param data: a tuple of data just consists of subbank name
     """
     db = getDB()
     try:
@@ -36,7 +37,7 @@ def subbank_delete(data):
 
 def subbank_update(data):
     r"""
-            :param data: a tuple of data (oldname , newname , city , deposit)
+        :param data: a tuple of data (oldname , newname , city , deposit)
     """
     db = getDB()
     try:

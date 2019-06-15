@@ -5,7 +5,7 @@ import account
 import client
 import loan
 import employee
-import  subbank
+import subbank
 from . import cleanUp
 
 if __name__ == '__main__':

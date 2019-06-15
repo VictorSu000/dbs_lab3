@@ -6,8 +6,8 @@ def account_add(data):
     :param data: a tuple of data consists of all account columns, 储蓄account columns(except account number)
     and 支票account columns(except account number). Totally 10 values（1 err code)
     Specially, class must be '支票' or '储蓄'
-    :sqlparam (IN num varchar(20), IN deposite decimal, IN opendate DATE,IN zhname varchar(20), IN class varchar(10),
-    IN rate decimal, IN curclass varchar(20), IN zpdeposite decimal, OUT err binary)
+    :sqlparam (IN 账户号 varchar(20), IN 余额 decimal(15,2), IN 开户日期 DATE,IN 支行名 varchar(20), IN 账户类型 varchar(10),
+    IN 利率 decimal, IN 货币类型 varchar(20), IN 透支余额 decimal, OUT err binary)
     """
     db = getDB()
     try:
@@ -30,8 +30,8 @@ def account_update(data):
     :param data: a tuple of data consists of all account columns, 储蓄account columns(except account number)
     and 支票account columns(except account number). Totally 9 values(without err code)
     Specially, class must be '支票' or '储蓄'
-    :sqlparam (IN id varchar(18), IN num varchar(20), IN deposite decimal, IN opendate DATE,IN zhname varchar(20), IN class varchar(10),
-    IN rate decimal, IN curclass varchar(20), IN zpdeposite decimal)
+    :sqlparam (IN 身份证号 varchar(18), IN 账户号 varchar(20), IN 余额 decimal(15,2), IN 开户日期 DATE,IN 支行名 varchar(20), IN 账户类型 varchar(10),
+    IN 利率 decimal, IN 货币类型 varchar(20), IN 透支余额 decimal(15,2))
     PS: class cannot be changed!
     """
     db = getDB()
@@ -49,7 +49,8 @@ def account_update(data):
 
 def account_delete(data):
     r"""
-    :param data: a tuple of data consists of all
+    :param data: a tuple of data consists of 账户ID
+    :sql param(账户号 varchar(20))
     """
     db = getDB()
 
@@ -67,6 +68,7 @@ def account_delete(data):
 def own_account(data):
     r"""
     :param data: a tuple of data consists of 身份证号 and 账户号
+    :sql param(身份证号 varchar(18),账户号 varchar(20))
     """
     db = getDB()
 
