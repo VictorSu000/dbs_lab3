@@ -36,7 +36,7 @@ def client_delete(data):
         db.rollback()
 
 
-def client_update(date):
+def client_update(data):
     r"""
             :param data: a tuple of data consists of all 客户 columns
     """
