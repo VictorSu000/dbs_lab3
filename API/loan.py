@@ -1,11 +1,13 @@
 import MySQLdb
 
+from . import getDB
 
-def loan_add(db, data):
+def loan_add(data):
     r"""
-    :param db: database connector
     :param data: a tuple of data consists of all 贷款 columns
     """
+    db = getDB()
+
     try:
         cur = db.cursor()
 
@@ -17,11 +19,12 @@ def loan_add(db, data):
         db.rollback()
 
 
-def loan_delete(db, data):
+def loan_delete(data):
     r"""
-    :param db: database connector
     :param data: a tuple of data consists of 贷款号 and err code ( for refusal of deleting "发放中" state loans)
     """
+    db = getDB()
+
     try:
         cur = db.cursor()
 
@@ -38,11 +41,12 @@ def loan_delete(db, data):
         db.rollback()
 
 
-def fund_add(db, data):
+def fund_add(data):
     r"""
-    :param db: database connector
     :param data: a tuple of data consists of all 款项 columns and err code
     """
+    db = getDB()
+
     try:
         cur = db.cursor()
 
@@ -59,11 +63,12 @@ def fund_add(db, data):
         db.rollback()
 
 
-def take_loan(db, data):
+def take_loan(data):
     r"""
-    :param db: database connector
     :param data: a tuple of data consists of all 借贷 columns
     """
+    db = getDB()
+
     try:
         cur = db.cursor()
 
@@ -77,23 +82,15 @@ def take_loan(db, data):
 
 if __name__ == '__main__':
     try:
-        db = MySQLdb.connect(host='localhost', port=3306, user='root', password='123456', db='bank')
-        print('mysql open success')
-        db.autocommit(False)
-        cur = db.cursor()
-        db.set_character_set('utf8')
-        cur.execute('SET NAMES utf8;')
-        cur.execute('SET CHARACTER SET utf8;')
-        cur.execute('SET character_set_connection=utf8;')
+        pass
 
         # 实例data，具体请参考函数注释
         # cur.callproc('loan_add', ('DK02', '龙兴', 50000, '未开始发放'))
         # db.commit()
-        # loan_delete(db, ('DK01', 0))
+        # loan_delete(('DK01', 0))
         # cur.callproc('fund_add', ('KX03', 'DK01', '2018-12-25', 10000))
         # db.commit()
 
-        db.close()
     except Exception as e:
         print("cannot open mysql due to:\n", e)
 
