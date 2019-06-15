@@ -1,6 +1,6 @@
 import MySQLdb
 
-from . import getDB
+from API import getDB
 
 def employee_add(data):
     r"""

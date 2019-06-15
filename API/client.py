@@ -1,5 +1,5 @@
 import MySQLdb
-from . import getDB
+from API import getDB
 
 
 def client_add(data):

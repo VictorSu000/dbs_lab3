@@ -1,6 +1,6 @@
 import MySQLdb
 
-from . import getDB
+from API import getDB
 
 def loan_add(data):
     r"""
