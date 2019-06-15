@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QTableWidget, QAbstractItemView, QPushButton, QHBoxLayout, QCheckBox, QTableWidgetItem, QMessageBox
 
-from .addWindow import AddWindow
+from .inputDataWindow import InputDataWindow
 
 class SearchWindow(QWidget):
     def __init__(self, parent=None, columns=()):
@@ -39,10 +39,11 @@ class SearchWindow(QWidget):
             grid.addWidget(buttons[i], line, i + 2)
         
         buttons[1].clicked.connect(self.showAddWindow)
+        buttons[2].clicked.connect(self.showModifyWindow)
         buttons[3].clicked.connect(self.deleteLine)
         self.setLayout(grid)
 
-    def addLine(self, data=[]):
+    def addLine(self, data):
         # table中增加一行
         row = self.table.rowCount()
         self.table.setRowCount(row + 1)
@@ -54,11 +55,22 @@ class SearchWindow(QWidget):
         reply = QMessageBox.question(self, 'Message', '确定删除?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
-            self.table.currentRow()
             self.table.removeRow(self.table.currentRow())
-        
+
+    def modifyData(self, modifyRow, data):
+        for col in range(len(data)):
+            self.table.item(modifyRow, col).setText(data[col])
 
     def showAddWindow(self):
         # 展示 新增 窗口
-        self.addWindow = AddWindow(columns=self.columns, okCallback=self.addLine)
+        self.addWindow = InputDataWindow(self.columns, ["" for tmp in self.columns], self.addLine)
         self.addWindow.show()
+
+    def showModifyWindow(self):
+        # 展示 修改 窗口
+        currentRow = self.table.currentRow()
+        if currentRow < 0:
+            return
+        presetData = [self.table.item(currentRow, col).text() for col in range(self.table.columnCount())]
+        self.modifyWindow = InputDataWindow(self.columns, presetData, lambda data:self.modifyData(currentRow, data))
+        self.modifyWindow.show()
