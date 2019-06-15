@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QTableWidget, QAbstractItemView, QPushButton
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QTableWidget, QAbstractItemView, QPushButton, QHBoxLayout, QCheckBox, QTableWidgetItem, QMessageBox
 
 from .addWindow import AddWindow
 
@@ -18,23 +19,46 @@ class SearchWindow(QWidget):
             grid.addWidget(QLineEdit(), line, 1)
             line += 1
 
-        table = QTableWidget()
-        table.setColumnCount(len(self.columns))
-        table.setHorizontalHeaderLabels(self.columns)
-        table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        table.setSortingEnabled(True)   # 设置表头可以自动排序
+        self.table = QTableWidget()
+        self.table.setColumnCount(len(self.columns))
+        self.table.setHorizontalHeaderLabels(self.columns)
+        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # 设置选择行为，以行为单位
+        self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        # 设置选择模式，只选择单行
+        self.table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.table.setFocusPolicy(Qt.NoFocus)
+        self.table.setSortingEnabled(True)   # 设置表头可以自动排序
 
         tableHeight = 5
-        grid.addWidget(table, line, 0, tableHeight, 0)
+        grid.addWidget(self.table, line, 0, tableHeight, 0)
         line += tableHeight
 
-        buttons = [ QPushButton(text) for text in ("查询", "增加", "删除", "保存") ]
+        buttons = [ QPushButton(text) for text in ("查询", "新增", "修改", "删除") ]
         for i in range(len(buttons)):
             grid.addWidget(buttons[i], line, i + 2)
         
         buttons[1].clicked.connect(self.showAddWindow)
+        buttons[3].clicked.connect(self.deleteLine)
         self.setLayout(grid)
 
+    def addLine(self, data=[]):
+        # table中增加一行
+        row = self.table.rowCount()
+        self.table.setRowCount(row + 1)
+        
+        for i in range(len(data)):
+            self.table.setItem(row, i, QTableWidgetItem(data[i]))
+
+    def deleteLine(self):
+        reply = QMessageBox.question(self, 'Message', '确定删除?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            self.table.currentRow()
+            self.table.removeRow(self.table.currentRow())
+        
+
     def showAddWindow(self):
-        self.addWindow = AddWindow(columns=self.columns)
+        # 展示 新增 窗口
+        self.addWindow = AddWindow(columns=self.columns, okCallback=self.addLine)
         self.addWindow.show()
