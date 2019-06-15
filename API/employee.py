@@ -1,10 +1,12 @@
 import MySQLdb
 
-from . import getDB
+from API import getDB
 
 def employee_add(data):
     r"""
-            :param data: a tuple of data consists of all 员工 columns
+        :param data: a tuple of data consists of all 员工 columns
+        :sql param(IN 身份证号 varchar(18), IN 姓名 varchar(20), IN 联系电话 varchar(20),
+        IN 家庭住址 varchar(1024), IN 开始工作日期 DATE, IN 支行名字 varchar(20))
     """
     db = getDB()
     
@@ -21,7 +23,8 @@ def employee_add(data):
 
 def employee_delete(data):
     r"""
-            :param data: a tuple of data jsut consists of employee ID
+        :param data: a tuple of data jsut consists of employee ID
+        :sql param(IN 身份证号 varchar(18))
     """
     db = getDB()
     
@@ -38,7 +41,9 @@ def employee_delete(data):
 
 def employee_update(data):
     r"""
-            :param data: a tuple of data just consists of all 员工 columns
+        :param data: a tuple of data just consists of all 员工 columns
+        :sql param(IN 身份证号 varchar(18), IN 姓名 varchar(20), IN 联系电话 varchar(20),
+        IN 家庭住址 varchar(1024), IN 开始工作日期 DATE, IN 支行名字 varchar(20))
     """
     db = getDB()
     

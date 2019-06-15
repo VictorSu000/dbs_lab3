@@ -5,8 +5,8 @@ import account
 import client
 import loan
 import employee
-import  subbank
-from . import cleanUp
+import subbank
+from API import cleanUp
 
 if __name__ == '__main__':
     try:
@@ -29,8 +29,9 @@ if __name__ == '__main__':
 
 
         #账户管理模块测试
-        account.account_update(data=('0001', 'CX01', '290000', '2018-03-16', '龙兴', '支票', '1001', '0.03', 'AUD',0))
-
+        account.account_update(data=('0001', 'CX01', '290000', '2018-03-16', '龙兴', '支票1', '1001', '0.03', 'AUD',0))
+        #account.account_add(data=('0002', '290000', '2018-03-16', '龙兴', '支票', '1001', '0.03', 'AUD', 0, 0))
+        #account.account_delete(data = ('0001',))
         cleanUp()
         
     except Exception as e:
