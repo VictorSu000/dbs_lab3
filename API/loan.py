@@ -19,6 +19,7 @@ def loan_add(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def loan_delete(data):
@@ -41,6 +42,7 @@ def loan_delete(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def fund_add(data):
@@ -65,6 +67,7 @@ def fund_add(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def take_loan(data):
@@ -83,6 +86,7 @@ def take_loan(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 if __name__ == '__main__':

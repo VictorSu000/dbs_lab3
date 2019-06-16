@@ -17,6 +17,7 @@ def subbank_add(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def subbank_delete(data):
@@ -33,6 +34,7 @@ def subbank_delete(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def subbank_update(data):
@@ -49,6 +51,7 @@ def subbank_update(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def subbank_search(conditions):

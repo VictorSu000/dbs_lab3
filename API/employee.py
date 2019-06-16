@@ -19,6 +19,7 @@ def employee_add(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def employee_delete(data):
@@ -37,6 +38,7 @@ def employee_delete(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def employee_update(data):
@@ -56,6 +58,7 @@ def employee_update(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 if __name__ == '__main__':

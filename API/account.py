@@ -24,6 +24,7 @@ def account_add(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 def account_update(data):
     r"""
@@ -45,6 +46,7 @@ def account_update(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def account_delete(data):
@@ -63,6 +65,7 @@ def account_delete(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def own_account(data):
@@ -81,6 +84,7 @@ def own_account(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 if __name__ == '__main__':

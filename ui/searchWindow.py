@@ -83,8 +83,11 @@ class SearchWindow(QWidget):
             self.table.setItem(row, i, QTableWidgetItem(data[i]))
             dataType = self.columnDefs[i]["type"]
             data[i] = convertToInitial[dataType](data[i])
-        
-        self.insertFunc(data)
+
+        try:
+            self.insertFunc(data)
+        except Exception as e:
+            print("UI window:", e)
 
     def deleteLine(self):
         reply = QMessageBox.question(self, 'Message', '确定删除?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -94,8 +97,12 @@ class SearchWindow(QWidget):
             for col in self.pkIndexes:
                 dataType = self.columnDefs[col]["type"]
                 data.append(convertToInitial[dataType](self.table.item(self.table.currentRow(), col).text()))
-            self.deleteFunc(data)
-            self.table.removeRow(self.table.currentRow())
+
+            try:
+                self.deleteFunc(data)
+                self.table.removeRow(self.table.currentRow())
+            except Exception as e:
+                print("UI window:", e)
 
     def modifyData(self, modifyRow, data):
         for col in range(len(data)):
@@ -110,7 +117,10 @@ class SearchWindow(QWidget):
             dataType = self.columnDefs[col]["type"]
             dataToSend.append(convertToInitial[dataType](data[col]))
 
-        self.updateFunc(dataToSend)
+        try:
+            self.updateFunc(dataToSend)
+        except Exception as e:
+            print("UI window:", e)
 
     def showAddWindow(self):
         # 展示 新增 窗口

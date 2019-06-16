@@ -20,6 +20,7 @@ def client_add(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def client_delete(data):
@@ -38,6 +39,7 @@ def client_delete(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 def client_update(data):
@@ -58,6 +60,7 @@ def client_update(data):
     except Exception as e:
         print(e)
         db.rollback()
+        raise e
 
 
 if __name__ == '__main__':
