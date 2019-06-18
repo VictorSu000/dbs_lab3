@@ -29,10 +29,19 @@ if __name__ == '__main__':
 
 
         #账户管理模块测试
-        account.account_update(data=('0001', 'CX01', '290000', '2018-03-16', '龙兴', '支票1', '1001', '0.03', 'AUD',0))
+        #account.account_update(data=('0001', 'CX01', '290000', '2018-03-16', '龙兴', '支票1', '1001', '0.03', 'AUD',0))
         #account.account_add(data=('0002', '290000', '2018-03-16', '龙兴', '支票', '1001', '0.03', 'AUD', 0, 0))
         #account.account_delete(data = ('0001',))
-        cleanUp()
         
+
+        #支行管理
+        #subbank.subbank_add(data=('合肥支行','合肥','2'))
+        #account.account_add(data=('ZP07', 23454, '2019-02-03', '合肥支行', '支票', '1003', 0, '0', 5000, 0))
+        #subbank.subbank_delete(data=('合肥支行',))
+
+        #客户及员工管理
+        #client.client_delete(data=('0001',))
+        employee.employee_delete(data=('1001',))
+
     except Exception as e:
         print("cannot open mysql due to:\n", e)
