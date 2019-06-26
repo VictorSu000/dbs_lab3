@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QTabWidget, QMainWindow
 from .searchWindow import SearchWindow
 
 from API.subbank import subbank_add, subbank_delete, subbank_update, subbank_search
+from API.employee import employee_add, employee_delete, employee_update, employee_search
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -30,12 +31,38 @@ class MainWindow(QMainWindow):
             "type": "number",
         })
         self.subbankTab = SearchWindow(subbankColumnDefs, subbank_search, subbank_update, subbank_delete, subbank_add)
-        self.tab2 = QWidget()
-        self.tab3 = QWidget()
-
         #将选项卡添加到顶层窗口中
         tabs.addTab(self.subbankTab, "支行管理")
-        tabs.addTab(self.tab2, "Tab 2")
+
+        employeeColumnDefs = ({
+            "name": "身份证号",
+            "isPK": True,
+            "type": "string",
+        }, {
+            "name": "姓名",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "联系电话",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "家庭住址",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "开始工作日期",
+            "isPK": False,
+            "type": "date",
+        }, {
+            "name": "支行名字",
+            "isPK": False,
+            "type": "string",
+        })
+        self.employeeTab = SearchWindow(employeeColumnDefs, employee_search, employee_update, employee_delete, employee_add)
+        tabs.addTab(self.employeeTab, "员工管理")
+
+        self.tab3 = QWidget()
         tabs.addTab(self.tab3, "Tab 3")
 
         # QTabWidget的控件大小
