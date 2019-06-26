@@ -17,7 +17,7 @@ def subbank_add(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception("添加支行失败！")
 
 
 def subbank_delete(data):
@@ -34,7 +34,7 @@ def subbank_delete(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception("删除支行失败！")
 
 
 def subbank_update(data):
@@ -51,7 +51,7 @@ def subbank_update(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception("更新支行数据失败！")
 
 
 def subbank_search(conditions):
@@ -77,3 +77,4 @@ def subbank_search(conditions):
 
     except Exception as e:
         print(e)
+        raise Exception("查询支行数据失败！")

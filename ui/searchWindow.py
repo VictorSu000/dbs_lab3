@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QTableWidget, QAbstractItemView, QPushButton, QHBoxLayout, QCheckBox, QTableWidgetItem, QMessageBox
 
 from .inputDataWindow import InputDataWindow
+from .warningWindow import showWarningWindow
 
 from .dataTypeConvert import convertToInitial, convertToText
 
@@ -65,7 +66,12 @@ class SearchWindow(QWidget):
                     "name": name,
                     "condition": condition,
                 })
-        data = self.searchFunc(conditions)
+
+        try:
+            data = self.searchFunc(conditions)
+        except Exception as e:
+            showWarningWindow(self, e)
+            return
 
         self.table.clearContents()
         self.table.setRowCount(len(data))
@@ -76,6 +82,12 @@ class SearchWindow(QWidget):
 
     def addLine(self, data):
         # table中增加一行，数据库中对应也增加记录
+        try:
+            self.insertFunc(data)
+        except Exception as e:
+            showWarningWindow(self, e)
+            return
+
         row = self.table.rowCount()
         self.table.setRowCount(row + 1)
         
@@ -83,11 +95,6 @@ class SearchWindow(QWidget):
             self.table.setItem(row, i, QTableWidgetItem(data[i]))
             dataType = self.columnDefs[i]["type"]
             data[i] = convertToInitial[dataType](data[i])
-
-        try:
-            self.insertFunc(data)
-        except Exception as e:
-            print("UI window:", e)
 
     def deleteLine(self):
         reply = QMessageBox.question(self, 'Message', '确定删除?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -100,14 +107,13 @@ class SearchWindow(QWidget):
 
             try:
                 self.deleteFunc(data)
-                self.table.removeRow(self.table.currentRow())
             except Exception as e:
-                print("UI window:", e)
+                showWarningWindow(self, e)
+                return
+                
+            self.table.removeRow(self.table.currentRow())
 
     def modifyData(self, modifyRow, data):
-        for col in range(len(data)):
-            self.table.item(modifyRow, col).setText(data[col])
-
         dataToSend = []
         for col in self.pkIndexes:
             dataType = self.columnDefs[col]["type"]
@@ -120,7 +126,11 @@ class SearchWindow(QWidget):
         try:
             self.updateFunc(dataToSend)
         except Exception as e:
-            print("UI window:", e)
+            showWarningWindow(self, e)
+            return
+
+        for col in range(len(data)):
+            self.table.item(modifyRow, col).setText(data[col])
 
     def showAddWindow(self):
         # 展示 新增 窗口
