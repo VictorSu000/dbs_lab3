@@ -3,6 +3,7 @@ from .searchWindow import SearchWindow
 
 from API.subbank import subbank_add, subbank_delete, subbank_update, subbank_search
 from API.employee import employee_add, employee_delete, employee_update, employee_search
+from API.client import client_add, client_delete, client_update, client_search
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -62,8 +63,41 @@ class MainWindow(QMainWindow):
         self.employeeTab = SearchWindow(employeeColumnDefs, employee_search, employee_update, employee_delete, employee_add)
         tabs.addTab(self.employeeTab, "员工管理")
 
-        self.tab3 = QWidget()
-        tabs.addTab(self.tab3, "Tab 3")
+        clientColumnDefs = ({
+            "name": "身份证号",
+            "isPK": True,
+            "type": "string",
+        }, {
+            "name": "姓名",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "联系电话",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "家庭住址",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "联系人姓名",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "联系人电话",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "联系人邮箱",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "关系",
+            "isPK": False,
+            "type": "string",
+        })
+        self.clientTab = SearchWindow(clientColumnDefs, client_search, client_update, client_delete, client_add)
+        tabs.addTab(self.clientTab, "客户管理")
 
         # QTabWidget的控件大小
         tabs.resize(900, 700) 

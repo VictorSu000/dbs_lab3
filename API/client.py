@@ -54,6 +54,9 @@ def client_update(data):
     try:
         cur = db.cursor()
 
+        # 去除第一个身份证号数据（这里多传一个身份证数据，是为了让各个update接口数据格式一致，均为：主键+所有字段）
+        data = data[1:]
+        
         cur.callproc('client_update', data)
 
         db.commit()
