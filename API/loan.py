@@ -88,6 +88,37 @@ def take_loan(data):
         db.rollback()
         raise e
 
+def loan_search(conditions):
+    r"""
+        :param conditions: a tuple of conditions. each element contains "name" and "condition" fields 
+    """
+    db = getDB()
+    try:
+        cur = db.cursor()
+
+        sql = "SELECT 贷款号, 名字, 金额, 状态, 负责人身份证号 from 贷款 where "
+        for con in conditions:
+            sql += f"{con['name']} "
+            sslice = con['condition'].split()
+            for word in sslice:
+                if word=='and' or word=='or':
+                    sql += f"{word} {con['name']} "
+                else:
+                    sql += f"{word} "
+            sql += "and "
+            
+        if sql[-4:] != "and ":
+            # 没有任何条件，去除最后的 "where "
+            sql = sql[:-6]
+        else:
+            # 去除多余的 "and "
+            sql = sql[:-4]
+        cur.execute(sql)
+        return cur.fetchall()
+
+    except Exception as e:
+        print(e)
+        raise Exception("查询格式错误！")
 
 if __name__ == '__main__':
     try:

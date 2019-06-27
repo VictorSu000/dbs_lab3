@@ -63,6 +63,38 @@ def client_update(data):
         raise e
 
 
+def client_search(conditions):
+    r"""
+        :param conditions: a tuple of conditions. each element contains "name" and "condition" fields 
+    """
+    db = getDB()
+    try:
+        cur = db.cursor()
+
+        sql = "SELECT 身份证号, 姓名, 联系电话, 家庭住址, 联系人姓名, 联系人手机号, 联系人Email, 联系人与客户关系 from 银行员工 where "
+        for con in conditions:
+            sql += f"{con['name']} "
+            sslice = con['condition'].split()
+            for word in sslice:
+                if word=='and' or word=='or':
+                    sql += f"{word} {con['name']} "
+                else:
+                    sql += f"{word} "
+            sql += "and "
+
+        if sql[-4:] != "and ":
+            # 没有任何条件，去除最后的 "where "
+            sql = sql[:-6]
+        else:
+            # 去除多余的 "and "
+            sql = sql[:-4]
+        cur.execute(sql)
+        return cur.fetchall()
+
+    except Exception as e:
+        print(e)
+        raise Exception("查询格式错误！")
+
 if __name__ == '__main__':
     try:
         pass

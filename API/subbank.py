@@ -64,17 +64,25 @@ def subbank_search(conditions):
 
         sql = "SELECT 名字, 城市, 资产 from 支行 where "
         for con in conditions:
-            sql += f"{con['name']} {con['condition']} and "
-        
+            sql += f"{con['name']} "
+            sslice = con['condition'].split()
+            for word in sslice:
+                if word=='and' or word=='or':
+                    sql += f"{word} {con['name']} "
+                else:
+                    sql += f"{word} "
+            sql += "and "
+
         if sql[-4:] != "and ":
             # 没有任何条件，去除最后的 "where "
             sql = sql[:-6]
         else:
             # 去除多余的 "and "
             sql = sql[:-4]
+        
         cur.execute(sql)
         return cur.fetchall()
 
     except Exception as e:
         print(e)
-        raise Exception("查询支行数据失败！")
+        raise Exception("查询格式错误！")
