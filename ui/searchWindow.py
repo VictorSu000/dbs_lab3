@@ -7,13 +7,15 @@ from .warningWindow import showWarningWindow
 from .dataTypeConvert import convertToInitial, convertToText
 
 class SearchWindow(QWidget):
-    def __init__(self, columnDefs, searchFunc, updateFunc, deleteFunc, insertFunc, parent=None):
-        super(QWidget, self).__init__(parent)
+    def __init__(self, columnDefs, searchFunc, updateFunc, deleteFunc, insertFunc, recordOperator, parent=None):
+        super(SearchWindow, self).__init__(parent)
         self.columnDefs = columnDefs
         self.searchFunc = searchFunc
         self.updateFunc = updateFunc
         self.deleteFunc = deleteFunc
         self.insertFunc = insertFunc
+
+        self.recordOperator = recordOperator
         # pkIndexes 调用删除函数时，需要传的字段(一般是主键)在columnDefs中的下标
         self.pkIndexes = [ index for index in range(len(columnDefs)) if columnDefs[index]["isPK"] ]
         self.initUI()
@@ -46,14 +48,14 @@ class SearchWindow(QWidget):
         grid.addWidget(self.table, line, 0, tableHeight, 0)
         line += tableHeight
 
-        buttons = [ QPushButton(text) for text in ("查询", "新增", "修改", "删除") ]
-        for i in range(len(buttons)):
-            grid.addWidget(buttons[i], line, i + 2)
+        self.buttons = [ QPushButton(text) for text in ("查询", "新增", "修改", "删除") ]
+        for i in range(len(self.buttons)):
+            grid.addWidget(self.buttons[i], line, i + 2)
         
-        buttons[0].clicked.connect(self.searchData)
-        buttons[1].clicked.connect(self.showAddWindow)
-        buttons[2].clicked.connect(self.showModifyWindow)
-        buttons[3].clicked.connect(self.deleteLine)
+        self.buttons[0].clicked.connect(self.searchData)
+        self.buttons[1].clicked.connect(self.showAddWindow)
+        self.buttons[2].clicked.connect(self.showModifyWindow)
+        self.buttons[3].clicked.connect(self.deleteLine)
         self.setLayout(grid)
 
     def searchData(self):
@@ -122,6 +124,14 @@ class SearchWindow(QWidget):
         for col in range(len(data)):
             dataType = self.columnDefs[col]["type"]
             dataToSend.append(convertToInitial[dataType](data[col]))
+
+        if self.recordOperator:
+            operatorDialog = QInputDialog()
+            operator, ok = operatorDialog.getText(self, "input", "请输入操作员身份证号：")
+            if ok:
+                dataToSend.insert(0, operator)
+            else:
+                return
 
         try:
             self.updateFunc(dataToSend)

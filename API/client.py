@@ -74,7 +74,7 @@ def client_search(conditions):
     try:
         cur = db.cursor()
 
-        sql = "SELECT 身份证号, 姓名, 联系电话, 家庭住址, 联系人姓名, 联系人手机号, 联系人Email, 联系人与客户关系 from 银行员工 where "
+        sql = "SELECT 身份证号, 姓名, 联系电话, 家庭住址, 联系人姓名, 联系人手机号, 联系人Email, 联系人与客户关系 from 客户 where "
         for con in conditions:
             sql += f"{con['name']} "
             sslice = con['condition'].split()
