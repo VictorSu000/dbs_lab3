@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QTableWidget, QAbstractItemView, QPushButton, QHBoxLayout, QCheckBox, QTableWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QTableWidget, QAbstractItemView, QPushButton, QHBoxLayout, QCheckBox, QTableWidgetItem, QMessageBox, QInputDialog
 
 from .inputDataWindow import InputDataWindow
 from .warningWindow import showWarningWindow
@@ -7,7 +7,7 @@ from .warningWindow import showWarningWindow
 from .dataTypeConvert import convertToInitial, convertToText
 
 class SearchWindow(QWidget):
-    def __init__(self, columnDefs, searchFunc, updateFunc, deleteFunc, insertFunc, recordOperator, parent=None):
+    def __init__(self, columnDefs, searchFunc, updateFunc, deleteFunc, insertFunc, additionalButtons, recordOperator=False, parent=None):
         super(SearchWindow, self).__init__(parent)
         self.columnDefs = columnDefs
         self.searchFunc = searchFunc
@@ -16,6 +16,7 @@ class SearchWindow(QWidget):
         self.insertFunc = insertFunc
 
         self.recordOperator = recordOperator
+        self.additionalButtons = additionalButtons
         # pkIndexes 调用删除函数时，需要传的字段(一般是主键)在columnDefs中的下标
         self.pkIndexes = [ index for index in range(len(columnDefs)) if columnDefs[index]["isPK"] ]
         self.initUI()
@@ -48,14 +49,16 @@ class SearchWindow(QWidget):
         grid.addWidget(self.table, line, 0, tableHeight, 0)
         line += tableHeight
 
-        self.buttons = [ QPushButton(text) for text in ("查询", "新增", "修改", "删除") ]
-        for i in range(len(self.buttons)):
-            grid.addWidget(self.buttons[i], line, i + 2)
+        offset = len(self.additionalButtons)
+        buttons = self.additionalButtons
+        buttons += [ QPushButton(text) for text in ("查询", "新增", "修改", "删除") ]
+        for i in range(len(buttons)):
+            grid.addWidget(buttons[i], line, i + 2)
         
-        self.buttons[0].clicked.connect(self.searchData)
-        self.buttons[1].clicked.connect(self.showAddWindow)
-        self.buttons[2].clicked.connect(self.showModifyWindow)
-        self.buttons[3].clicked.connect(self.deleteLine)
+        buttons[offset].clicked.connect(self.searchData)
+        buttons[offset + 1].clicked.connect(self.showAddWindow)
+        buttons[offset + 2].clicked.connect(self.showModifyWindow)
+        buttons[offset + 3].clicked.connect(self.deleteLine)
         self.setLayout(grid)
 
     def searchData(self):

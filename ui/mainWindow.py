@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QTabWidget, QMainWindow
 from .searchWindow import SearchWindow
-from .searchWindowWithOwnButton import SearchWindowWithOwnButton
+from .accountSearchWindow import AccountSearchWindow
 
 from API.subbank import subbank_add, subbank_delete, subbank_update, subbank_search
 from API.employee import employee_add, employee_delete, employee_update, employee_search
@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
             "isPK": False,
             "type": "number",
         })
-        self.subbankTab = SearchWindow(subbankColumnDefs, subbank_search, subbank_update, subbank_delete, subbank_add, False)
+        self.subbankTab = SearchWindow(subbankColumnDefs, subbank_search, subbank_update, subbank_delete, subbank_add, [])
         #将选项卡添加到顶层窗口中
         tabs.addTab(self.subbankTab, "支行管理")
 
@@ -62,7 +62,7 @@ class MainWindow(QMainWindow):
             "isPK": False,
             "type": "string",
         })
-        self.employeeTab = SearchWindow(employeeColumnDefs, employee_search, employee_update, employee_delete, employee_add, False)
+        self.employeeTab = SearchWindow(employeeColumnDefs, employee_search, employee_update, employee_delete, employee_add, [])
         tabs.addTab(self.employeeTab, "员工管理")
 
         clientColumnDefs = ({
@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
             "isPK": False,
             "type": "string",
         })
-        self.clientTab = SearchWindow(clientColumnDefs, client_search, client_update, client_delete, client_add, False)
+        self.clientTab = SearchWindow(clientColumnDefs, client_search, client_update, client_delete, client_add, [])
         tabs.addTab(self.clientTab, "客户管理")
 
         accountColumnDefs = ({
@@ -120,8 +120,9 @@ class MainWindow(QMainWindow):
         }, {
             "name": "账户类型",
             "isPK": False,
+            "candidates": ["储蓄", "支票"],
             "type": "string",
-        },{
+        }, {
             "name": "负责人身份证号",
             "isPK": False,
             "type": "string",
@@ -138,7 +139,7 @@ class MainWindow(QMainWindow):
             "isPK": False,
             "type": "number",
         })
-        self.accountTab = SearchWindowWithOwnButton(accountColumnDefs, account_search, account_update, account_delete, account_add, own_account, True, "绑定客户", "请输入客户身份证号：")
+        self.accountTab = AccountSearchWindow(accountColumnDefs, account_search, account_update, account_delete, account_add, own_account)
         tabs.addTab(self.accountTab, "账户管理")
         # QTabWidget的控件大小
         tabs.resize(900, 800) 

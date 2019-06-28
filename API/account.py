@@ -14,6 +14,9 @@ def account_add(data):
     try:
         cur = db.cursor()
 
+        # 补充 OUT 字段
+        data += ("",)
+
         cur.callproc('account_add', data)
 
         cur.execute("select @_account_add_9")
@@ -41,8 +44,10 @@ def account_update(data):
     try:
         cur = db.cursor()
 
+        print(data)
+
         # 去除多传的账户号，为了保持接口一致
-        data = data[:1] + data[1:]
+        data = data[:1] + data[2:]
         cur.callproc('account_update', data)
 
         db.commit()
