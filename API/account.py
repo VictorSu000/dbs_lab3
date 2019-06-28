@@ -97,8 +97,9 @@ def account_search(conditions):
     try:
         cur = db.cursor()
 
-        sql = "SELECT 账户号, 余额, 开户日期, 支行名, 账户类型, 负责人身份证号 from 账户 where "
-
+        sqlc = "SELECT 账户.账户号, 余额, 开户日期, 支行名, 账户类型, 负责人身份证号, 利率, 货币类型, NULL as 透支余额 from 账户,储蓄账户 where 账户.账户号=储蓄账户.账户号 and "
+        sqlz = "SELECT 账户.账户号, 余额, 开户日期, 支行名, 账户类型, 负责人身份证号, NULL as 利率, NULL as 货币类型, 透支余额 from 账户,支票账户 where 账户.账户号=支票账户.账户号 and "
+        sql = ''
         for con in conditions:
             sql += f"( {con['name']} "
             sslice = con['condition'].split()
@@ -109,12 +110,16 @@ def account_search(conditions):
                     sql += f"{word} "
             sql += ") and "
 
-        if sql[-4:] != "and ":
-            # 没有任何条件，去除最后的 "where "
-            sql = sql[:-6]
-        else:
+        sqlc = sqlc + sql
+        sqlz = sqlz + sql
+
+        sqlc = sqlc[:-4]
+        sqlz = sqlz[:-4]
+
+        sql = f"{sqlc} UNION {sqlz}"
+        #if sql[-4:] == "and ":
             # 去除多余的 "and "
-            sql = sql[:-4]
+        #    sql = sql[:-4]
         
         cur.execute(sql)
         return cur.fetchall()
