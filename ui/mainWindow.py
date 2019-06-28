@@ -121,6 +121,10 @@ class MainWindow(QMainWindow):
             "name": "账户类型",
             "isPK": False,
             "type": "string",
+        },{
+            "name": "负责人身份证号",
+            "isPK": False,
+            "type": "string",
         }, {
             "name": "利率",
             "isPK": False,
@@ -135,7 +139,7 @@ class MainWindow(QMainWindow):
             "type": "number",
         })
         self.accountTab = SearchWindowWithOwnButton(accountColumnDefs, account_search, account_update, account_delete, account_add, own_account, True, "绑定客户", "请输入客户身份证号：")
-        tabs.addTab(self.accountTab, "客户管理")
+        tabs.addTab(self.accountTab, "账户管理")
         # QTabWidget的控件大小
         tabs.resize(900, 800) 
         # 主窗体的大小
