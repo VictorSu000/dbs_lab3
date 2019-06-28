@@ -1,5 +1,5 @@
 import MySQLdb
-from API import getDB
+from API import getDB,transNULL
 
 def account_add(data):
     r"""
@@ -7,9 +7,10 @@ def account_add(data):
     and 支票account columns(except account number). Totally 10 values（1 err code)
     Specially, class must be '支票' or '储蓄'
     :sqlparam (IN 账户号 varchar(20), IN 余额 decimal(15,2), IN 开户日期 DATE,IN 支行名 varchar(20), IN 账户类型 varchar(10),
-    IN 利率 decimal, IN 货币类型 varchar(20), IN 透支余额 decimal, OUT err binary)
+    IN 负责人身份证号 varchar(18), IN 利率 decimal, IN 货币类型 varchar(20), IN 透支余额 decimal, OUT err binary)
     """
     db = getDB()
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -29,14 +30,14 @@ def account_add(data):
 def account_update(data):
     r"""
     :param data: a tuple of data consists of all account columns, 储蓄account columns(except account number)
-    and 支票account columns(except account number). Totally 9 values(without err code)
+    and 支票account columns(except account number). Totally 10 values
     Specially, class must be '支票' or '储蓄'
     :sqlparam (IN 身份证号 varchar(18), IN 账户号 varchar(20), IN 余额 decimal(15,2), IN 开户日期 DATE,IN 支行名 varchar(20), IN 账户类型 varchar(10),
-    IN 利率 decimal, IN 货币类型 varchar(20), IN 透支余额 decimal(15,2))
+    IN 负责人身份证号 varchar(18),IN 利率 decimal, IN 货币类型 varchar(20), IN 透支余额 decimal(15,2))
     PS: class cannot be changed!
     """
     db = getDB()
-
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -76,7 +77,7 @@ def own_account(data):
     :sql param(身份证号 varchar(18),账户号 varchar(20))
     """
     db = getDB()
-
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -96,16 +97,17 @@ def account_search(conditions):
     try:
         cur = db.cursor()
 
-        sql = "SELECT 账户号, 余额, 开户日期, 支行名, 账户类型, 负责人身份证号 from 支行 where "
+        sql = "SELECT 账户号, 余额, 开户日期, 支行名, 账户类型, 负责人身份证号 from 账户 where "
+
         for con in conditions:
-            sql += f"{con['name']} "
+            sql += f"( {con['name']} "
             sslice = con['condition'].split()
             for word in sslice:
                 if word=='and' or word=='or':
                     sql += f"{word} {con['name']} "
                 else:
                     sql += f"{word} "
-            sql += "and "
+            sql += ") and "
 
         if sql[-4:] != "and ":
             # 没有任何条件，去除最后的 "where "

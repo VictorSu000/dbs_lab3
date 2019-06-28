@@ -1,5 +1,5 @@
 import MySQLdb
-from API import getDB
+from API import getDB,transNULL
 
 
 def client_add(data):
@@ -10,7 +10,7 @@ def client_add(data):
         IN 关系 varchar(10))
     """
     db = getDB()
-
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -50,7 +50,7 @@ def client_update(data):
         IN 关系 varchar(10))
     """
     db = getDB()
-
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -76,14 +76,14 @@ def client_search(conditions):
 
         sql = "SELECT 身份证号, 姓名, 联系电话, 家庭住址, 联系人姓名, 联系人手机号, 联系人Email, 联系人与客户关系 from 客户 where "
         for con in conditions:
-            sql += f"{con['name']} "
+            sql += f"( {con['name']} "
             sslice = con['condition'].split()
             for word in sslice:
                 if word=='and' or word=='or':
                     sql += f"{word} {con['name']} "
                 else:
                     sql += f"{word} "
-            sql += "and "
+            sql += ") and "
 
         if sql[-4:] != "and ":
             # 没有任何条件，去除最后的 "where "

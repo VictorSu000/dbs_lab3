@@ -1,6 +1,6 @@
 import MySQLdb
 
-from API import getDB
+from API import getDB,transNULL
 
 def employee_add(data):
     r"""
@@ -9,7 +9,7 @@ def employee_add(data):
         IN 家庭住址 varchar(1024), IN 开始工作日期 DATE, IN 支行名字 varchar(20))
     """
     db = getDB()
-    
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -48,7 +48,7 @@ def employee_update(data):
         IN 家庭住址 varchar(1024), IN 开始工作日期 DATE, IN 支行名字 varchar(20))
     """
     db = getDB()
-    
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -74,14 +74,14 @@ def employee_search(conditions):
 
         sql = "SELECT 身份证号, 姓名, 联系电话, 家庭住址, 开始工作日期, 支行_名字 from 银行员工 where "
         for con in conditions:
-            sql += f"{con['name']} "
+            sql += f"( {con['name']} "
             sslice = con['condition'].split()
             for word in sslice:
                 if word=='and' or word=='or':
                     sql += f"{word} {con['name']} "
                 else:
                     sql += f"{word} "
-            sql += "and "
+            sql += ") and "
             
         if sql[-4:] != "and ":
             # 没有任何条件，去除最后的 "where "

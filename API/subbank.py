@@ -1,5 +1,5 @@
 import MySQLdb
-from API import getDB
+from API import getDB,transNULL
 
 
 def subbank_add(data):
@@ -8,6 +8,7 @@ def subbank_add(data):
         :sql param(IN 支行名 varchar(20), IN 所在城市 varchar(20), IN 资产 decimal(15,2))
     """
     db = getDB()
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -42,6 +43,7 @@ def subbank_update(data):
         :param data: a tuple of data (oldname , newname , city , deposit)
     """
     db = getDB()
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -64,14 +66,14 @@ def subbank_search(conditions):
 
         sql = "SELECT 名字, 城市, 资产 from 支行 where "
         for con in conditions:
-            sql += f"{con['name']} "
+            sql += f"( {con['name']} "
             sslice = con['condition'].split()
             for word in sslice:
                 if word=='and' or word=='or':
                     sql += f"{word} {con['name']} "
                 else:
                     sql += f"{word} "
-            sql += "and "
+            sql += ") and "
 
         if sql[-4:] != "and ":
             # 没有任何条件，去除最后的 "where "

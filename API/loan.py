@@ -1,6 +1,6 @@
 import MySQLdb
 
-from API import getDB
+from API import getDB,transNULL
 
 def loan_add(data):
     r"""
@@ -9,7 +9,7 @@ def loan_add(data):
     IN 状态 varchar(45), IN 负责人身份证号 varchar(18))
     """
     db = getDB()
-
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -52,7 +52,7 @@ def fund_add(data):
     IN 金额 decimal(15,2), OUT err binary)
     """
     db = getDB()
-
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -76,7 +76,7 @@ def take_loan(data):
     :sql param(IN 贷款号 varchar(20), IN 身份证号 varchar(18))
     """
     db = getDB()
-
+    data = transNULL(data)
     try:
         cur = db.cursor()
 
@@ -98,14 +98,14 @@ def loan_search(conditions):
 
         sql = "SELECT 贷款号, 名字, 金额, 状态, 负责人身份证号 from 贷款 where "
         for con in conditions:
-            sql += f"{con['name']} "
+            sql += f"( {con['name']} "
             sslice = con['condition'].split()
             for word in sslice:
                 if word=='and' or word=='or':
                     sql += f"{word} {con['name']} "
                 else:
                     sql += f"{word} "
-            sql += "and "
+            sql += ") and "
             
         if sql[-4:] != "and ":
             # 没有任何条件，去除最后的 "where "
