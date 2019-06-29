@@ -56,6 +56,20 @@ def fund_add(data):
     try:
         cur = db.cursor()
 
+        cur.execute(f"select 款项号 from 款项 where 贷款号 = '{data[0]}' order by 款项号 limit 1;")
+        fund = cur.fetchall()
+        if len(fund) > 0:
+            fundID = fund[0][0]
+            pos = fundID.find("KX")
+            newIDInt = int(fundID[pos + 2:]) + 1
+            if pos != -1:
+                newFundID = data[0] + "KX" + str(newIDInt)
+            else:
+                newFundID = data[0] + "KX01"
+        else:
+            newFundID = data[0] + "KX01"
+
+        data = (newFundID, ) + data + ("", )
         cur.callproc('fund_add', data)
 
         cur.execute('select @_fund_add_4')

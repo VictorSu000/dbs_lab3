@@ -7,7 +7,7 @@ from .warningWindow import showWarningWindow
 from .dataTypeConvert import convertToInitial, convertToText
 
 class SearchWindow(QWidget):
-    def __init__(self, columnDefs, searchFunc, updateFunc, deleteFunc, insertFunc, additionalButtons, recordOperator=False, parent=None):
+    def __init__(self, columnDefs, searchFunc, updateFunc, deleteFunc, insertFunc, additionalButtons, recordOperator=False, showUpdateButton=True, parent=None):
         super(SearchWindow, self).__init__(parent)
         self.columnDefs = columnDefs
         self.searchFunc = searchFunc
@@ -16,6 +16,7 @@ class SearchWindow(QWidget):
         self.insertFunc = insertFunc
 
         self.recordOperator = recordOperator
+        self.showUpdateButton = showUpdateButton
         self.additionalButtons = additionalButtons
         # pkIndexes 调用删除函数时，需要传的字段(一般是主键)在columnDefs中的下标
         self.pkIndexes = [ index for index in range(len(columnDefs)) if columnDefs[index]["isPK"] ]
@@ -51,14 +52,18 @@ class SearchWindow(QWidget):
 
         offset = len(self.additionalButtons)
         buttons = self.additionalButtons
-        buttons += [ QPushButton(text) for text in ("查询", "新增", "修改", "删除") ]
+        buttons += [ QPushButton(text) for text in ("查询", "新增", "删除") ]
+        if self.showUpdateButton:
+            buttons.append(QPushButton("修改"))
+
         for i in range(len(buttons)):
             grid.addWidget(buttons[i], line, i + 2)
         
         buttons[offset].clicked.connect(self.searchData)
         buttons[offset + 1].clicked.connect(self.showAddWindow)
-        buttons[offset + 2].clicked.connect(self.showModifyWindow)
-        buttons[offset + 3].clicked.connect(self.deleteLine)
+        buttons[offset + 2].clicked.connect(self.deleteLine)
+        if self.showUpdateButton:
+            buttons[offset + 3].clicked.connect(self.showModifyWindow)
         self.setLayout(grid)
 
     def searchData(self):

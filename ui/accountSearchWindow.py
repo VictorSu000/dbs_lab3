@@ -17,11 +17,10 @@ class AccountSearchWindow(SearchWindow):
         clientDialog = QInputDialog()
         client, ok = clientDialog.getText(self, "input", "请输入客户身份证号：")
         if ok:
-            data = []
+            data = [ client ]
             for col in self.pkIndexes:
                 dataType = self.columnDefs[col]["type"]
                 data.append(convertToInitial[dataType](self.table.item(self.table.currentRow(), col).text()))
-            data.append(client)
             try:
                 self.ownFunc(data)
             except Exception as e:

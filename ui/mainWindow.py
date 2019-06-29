@@ -1,11 +1,13 @@
 from PyQt5.QtWidgets import QWidget, QTabWidget, QMainWindow
 from .searchWindow import SearchWindow
 from .accountSearchWindow import AccountSearchWindow
+from .loanSearchWindow import LoanSearchWindow
 
 from API.subbank import subbank_add, subbank_delete, subbank_update, subbank_search
 from API.employee import employee_add, employee_delete, employee_update, employee_search
 from API.client import client_add, client_delete, client_update, client_search
 from API.account import account_add, account_delete, account_update, account_search, own_account
+from API.loan import loan_add, loan_delete, loan_search, fund_add, take_loan
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -141,6 +143,31 @@ class MainWindow(QMainWindow):
         })
         self.accountTab = AccountSearchWindow(accountColumnDefs, account_search, account_update, account_delete, account_add, own_account)
         tabs.addTab(self.accountTab, "账户管理")
+
+        loanColumnDefs = ({
+            "name": "贷款号",
+            "isPK": True,
+            "type": "string",
+        }, {
+            "name": "名字",
+            "isPK": False,
+            "type": "string",
+        }, {
+            "name": "金额",
+            "isPK": False,
+            "type": "number",
+        }, {
+            "name": "状态",
+            "isPK": False,
+            "candidates": ["未开始发放", "发放中", "已全部发放"],
+            "type": "string",
+        }, {
+            "name": "负责人身份证号",
+            "isPK": False,
+            "type": "string",
+        })
+        self.loanTab = LoanSearchWindow(loanColumnDefs, loan_search, loan_delete, loan_add, fund_add, take_loan)
+        tabs.addTab(self.loanTab, "贷款管理")
         # QTabWidget的控件大小
         tabs.resize(900, 800) 
         # 主窗体的大小

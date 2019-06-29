@@ -44,8 +44,6 @@ def account_update(data):
     try:
         cur = db.cursor()
 
-        print(data)
-
         # 去除多传的账户号，为了保持接口一致
         data = data[:1] + data[2:]
         cur.callproc('account_update', data)
