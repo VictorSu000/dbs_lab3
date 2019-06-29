@@ -1,6 +1,9 @@
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QPushButton, QComboBox
 
+from .warningWindow import showWarningWindow
+from .dataTypeConvert import convertToInitial
+
 class InputDataWindow(QWidget):
     def __init__(self, columnsDefs, presetData, okCallback, parent=None):
         # okCallback 点击确认后的回调函数
@@ -29,22 +32,16 @@ class InputDataWindow(QWidget):
             return comboBox
 
 
-        inputs = [ (QLabel(column["name"] + ":"), createInputItem(column, data)) for (column, data) in zip(self.columnsDefs, self.presetData)]
+        self.inputs = [ (QLabel(column["name"] + ":"), createInputItem(column, data)) for (column, data) in zip(self.columnsDefs, self.presetData)]
         line = 1
-        for input in inputs:
+        for input in self.inputs:
             grid.addWidget(input[0], line, 0)
             grid.addWidget(input[1], line, 1)
             line += 1
 
 
-        def getInputItemData(inputItem):
-            if isinstance(inputItem, QLineEdit):
-                return inputItem.text()
-            return inputItem.currentText()
-
-
         okButton = QPushButton("确认")
-        okButton.clicked.connect(lambda : (self.okCallback([getInputItemData(input[1]) for input in inputs]) or self.close()))
+        okButton.clicked.connect(self.okButtonClickHandler)
         okButton.setDefault(True)
         okButton.setShortcut(QKeySequence.InsertParagraphSeparator)
 
@@ -55,3 +52,28 @@ class InputDataWindow(QWidget):
         grid.addWidget(cancelButton, line, 1)
         self.setLayout(grid)
 
+
+    def okButtonClickHandler(self):
+
+        def getInputItemData(inputItemIndex):
+            # 传回去的数据已经是格式转换过后的
+            dataType = self.columnsDefs[inputItemIndex]["type"]
+            inputItem = self.inputs[inputItemIndex][1]
+            if isinstance(inputItem, QLineEdit):
+                text = inputItem.text()
+            else:
+                text = inputItem.currentText()
+            try:
+                data = convertToInitial[dataType](text)
+            except Exception as e:
+                print(e)
+                raise Exception(text + "格式错误！")
+            return data
+
+        try:
+            okCallbackData = [getInputItemData(inputIndex) for inputIndex in range(len(self.inputs))]
+        except Exception as e:
+            showWarningWindow(self, e)
+            return
+        
+        self.okCallback(okCallbackData) or self.close()

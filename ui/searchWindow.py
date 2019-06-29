@@ -86,20 +86,13 @@ class SearchWindow(QWidget):
                 self.table.setItem(row, col, QTableWidgetItem(convertToText[dataType](data[row][col])))
 
     def addLine(self, data):
-        # table中增加一行，数据库中对应也增加记录
         try:
             self.insertFunc(data)
         except Exception as e:
             showWarningWindow(self, e)
             return
 
-        row = self.table.rowCount()
-        self.table.setRowCount(row + 1)
-        
-        for i in range(len(data)):
-            self.table.setItem(row, i, QTableWidgetItem(data[i]))
-            dataType = self.columnDefs[i]["type"]
-            data[i] = convertToInitial[dataType](data[i])
+        self.searchData()
 
     def deleteLine(self):
         reply = QMessageBox.question(self, 'Message', '确定删除?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -116,7 +109,7 @@ class SearchWindow(QWidget):
                 showWarningWindow(self, e)
                 return
                 
-            self.table.removeRow(self.table.currentRow())
+            self.searchData()
 
     def modifyData(self, modifyRow, data):
         dataToSend = []
@@ -124,9 +117,7 @@ class SearchWindow(QWidget):
             dataType = self.columnDefs[col]["type"]
             dataToSend.append(convertToInitial[dataType](self.table.item(modifyRow, col).text()))
 
-        for col in range(len(data)):
-            dataType = self.columnDefs[col]["type"]
-            dataToSend.append(convertToInitial[dataType](data[col]))
+        dataToSend += data
 
         if self.recordOperator:
             operatorDialog = QInputDialog()
@@ -142,8 +133,7 @@ class SearchWindow(QWidget):
             showWarningWindow(self, e)
             return
 
-        for col in range(len(data)):
-            self.table.item(modifyRow, col).setText(data[col])
+        self.searchData()
 
     def showAddWindow(self):
         # 展示 新增 窗口
