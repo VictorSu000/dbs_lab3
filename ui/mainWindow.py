@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
             "isPK": False,
             "type": "date",
         }, {
-            "name": "支行名字",
+            "name": "支行_名字",
             "isPK": False,
             "type": "string",
         })
