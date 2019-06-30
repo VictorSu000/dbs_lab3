@@ -175,7 +175,7 @@ class MainWindow(QMainWindow):
         tabs.addTab(self.statisticTab, "业务统计")
 
         # QTabWidget的控件大小
-        tabs.resize(900, 800) 
+        tabs.resize(1000, 900) 
         # 主窗体的大小
-        self.resize(950, 850)
+        self.resize(1050, 950)
 
