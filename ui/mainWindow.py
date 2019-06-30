@@ -88,7 +88,7 @@ class MainWindow(QMainWindow):
             "isPK": False,
             "type": "string",
         }, {
-            "name": "联系人电话",
+            "name": "联系人手机号",
             "isPK": False,
             "type": "string",
         }, {
@@ -96,7 +96,7 @@ class MainWindow(QMainWindow):
             "isPK": False,
             "type": "string",
         }, {
-            "name": "关系",
+            "name": "联系人与客户关系",
             "isPK": False,
             "type": "string",
         })
