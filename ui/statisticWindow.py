@@ -1,5 +1,7 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QComboBox, QPushButton, QTableWidget, QAbstractItemView
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QComboBox, QPushButton, QTableWidget, QAbstractItemView, QTableWidgetItem
+
+from .warningWindow import showWarningWindow
 
 class StatisticWindow(QWidget):
     def __init__(self, statistic_search, parent=None):
@@ -24,11 +26,13 @@ class StatisticWindow(QWidget):
         grid.addWidget(self.yearComboBox, 2, 1)
         grid.addWidget(QLabel("月:"), 3, 0)
         self.monthComboBox = QComboBox()
-        self.monthComboBox.addItems([ str(x) for x in range(13) ])
+        self.monthComboBox.addItems([ str(x) for x in range(12) ])
         grid.addWidget(self.monthComboBox, 3, 1)
 
         # 展示表格部分
         self.table = QTableWidget()
+        self.table.setColumnCount(3)
+        self.table.setHorizontalHeaderLabels([ "支行", "业务总金额", "用户数" ])
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         # 设置选择行为，以行为单位
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -45,13 +49,21 @@ class StatisticWindow(QWidget):
         self.setLayout(grid)
 
     def buttonHandler(self):
-        data = ({
+        conditions = ({
             "name": "业务",
             "condition": self.serviceComboBox.currentText(),
         }, {
             "name": "时间",
-            "condition": f"{self.yearComboBox.currentText()}-{self.monthComboBox.currentText()}-0",
+            "condition": f"{self.yearComboBox.currentText()}-{self.monthComboBox.currentText()}",
         })
-        result = self.statistic_search(data)
-        print(result)
+        try:
+            data = self.statistic_search(conditions)
+        except Exception as e:
+            showWarningWindow(self, e)
+            return
         
+        self.table.clearContents()
+        self.table.setRowCount(len(data))
+        for row in range(len(data)):
+            for col in range(len(data[row])):
+                self.table.setItem(row, col, QTableWidgetItem(str(data[row][col])))
