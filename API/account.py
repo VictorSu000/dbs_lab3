@@ -149,7 +149,8 @@ def account_search(conditions):
         print(e)
         raise Exception("查询格式错误！")
 
-def own_search(condition)
+def own_search(condition):
+    pass
 
 if __name__ == '__main__':
     try:
