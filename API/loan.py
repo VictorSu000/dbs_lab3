@@ -142,7 +142,7 @@ def fund_search(data):
     try:
         cur = db.cursor()
 
-        sql = "SELECT 贷款号,款项号,日期,金额 from 款项 where 贷款号=" + data[0]
+        sql = f"SELECT 贷款号,款项号,日期,金额 from 款项 where 贷款号 = '{data[0]}'"
     
         cur.execute(sql)
         return cur.fetchall()
@@ -158,7 +158,7 @@ def take_loan_search(data):
     try:
         cur = db.cursor()
 
-        sql = "SELECT 贷款号,身份证号 from 借贷 where 贷款号=" + data[0]
+        sql = f"SELECT 贷款号,身份证号 from 借贷 where 贷款号 = '{data[0]}'"
     
         cur.execute(sql)
         return cur.fetchall()
