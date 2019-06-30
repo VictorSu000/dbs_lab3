@@ -30,6 +30,9 @@ class LoanSearchWindow(SearchWindow):
         self.searchData()
 
     def fundAddHandler(self):
+        if self.table.currentRow() < 0:
+            showWarningWindow(self, "请先选择某个数据！")
+            return
         fundAddDefs = ({
             "name": "日期",
             "type": "date",
@@ -42,6 +45,9 @@ class LoanSearchWindow(SearchWindow):
         self.fundAddWindow.show()
 
     def takeLoanHandler(self):
+        if self.table.currentRow() < 0:
+            showWarningWindow(self, "请先选择某个数据！")
+            return
         clientDialog = QInputDialog()
         client, ok = clientDialog.getText(self, "input", "请输入身份证号：")
         if ok:

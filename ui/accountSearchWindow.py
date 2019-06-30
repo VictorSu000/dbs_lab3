@@ -14,6 +14,9 @@ class AccountSearchWindow(SearchWindow):
         return [ownButton]
 
     def ownAccount(self):
+        if self.table.currentRow() < 0:
+            showWarningWindow(self, "请先选择某个数据！")
+            return
         clientDialog = QInputDialog()
         client, ok = clientDialog.getText(self, "input", "请输入客户身份证号：")
         if ok:

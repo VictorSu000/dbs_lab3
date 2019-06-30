@@ -100,6 +100,10 @@ class SearchWindow(QWidget):
         self.searchData()
 
     def deleteLine(self):
+        if self.table.currentRow() < 0:
+            showWarningWindow(self, "请先选择某个数据！")
+            return
+
         reply = QMessageBox.question(self, 'Message', '确定删除?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
@@ -149,6 +153,7 @@ class SearchWindow(QWidget):
         # 展示 修改 窗口
         currentRow = self.table.currentRow()
         if currentRow < 0:
+            showWarningWindow(self, "请先选择某个数据！")
             return
         presetData = [self.table.item(currentRow, col).text() for col in range(self.table.columnCount())]
         self.modifyWindow = InputDataWindow(self.columnDefs, presetData, lambda data:self.modifyData(currentRow, data))
