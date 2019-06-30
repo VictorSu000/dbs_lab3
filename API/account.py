@@ -157,7 +157,7 @@ def own_search(data):
     try:
         cur = db.cursor()
 
-        sql = "SELECT 账户号,身份证号,最近访问日期 from 拥有账户 where 账户号=" + data[0]
+        sql = f"SELECT 账户号,身份证号,最近访问日期 from 拥有账户 where 账户号 = '{data[0]}'"
     
         cur.execute(sql)
         return cur.fetchall()

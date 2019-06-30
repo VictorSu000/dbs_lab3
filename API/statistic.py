@@ -22,7 +22,7 @@ def statistic_search(conditions):
             sql = f"SELECT t1.名字 as 支行,业务总金额,用户数 from (SELECT 名字,SUM(金额) as 业务总金额 from 贷款 where 贷款号 in (SELECT 贷款号 from 款项 where {date_cmp}) group by 名字) t1,"+ \
                 f"(SELECT 名字,COUNT(distinct 身份证号) as 用户数 from 贷款,借贷 where 贷款.贷款号 = 借贷.贷款号 and 贷款.贷款号 in (SELECT 贷款号 from 款项 where {date_cmp}) group by 名字) t2 "+ \
                 "where t1.名字 = t2.名字"
-        print(sql)
+
         cur.execute(sql)
         return cur.fetchall()
 

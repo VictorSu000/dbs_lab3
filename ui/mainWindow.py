@@ -7,7 +7,7 @@ from .statisticWindow import StatisticWindow
 from API.subbank import subbank_add, subbank_delete, subbank_update, subbank_search
 from API.employee import employee_add, employee_delete, employee_update, employee_search
 from API.client import client_add, client_delete, client_update, client_search
-from API.account import account_add, account_delete, account_update, account_search, own_account
+from API.account import account_add, account_delete, account_update, account_search, own_account, own_search
 from API.loan import loan_add, loan_delete, loan_search, fund_add, take_loan
 from API.statistic import statistic_search
 
@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
             "isPK": False,
             "type": "number",
         })
-        self.accountTab = AccountSearchWindow(accountColumnDefs, account_search, account_update, account_delete, account_add, own_account)
+        self.accountTab = AccountSearchWindow(accountColumnDefs, account_search, account_update, account_delete, account_add, own_account, own_search)
         tabs.addTab(self.accountTab, "账户管理")
 
         loanColumnDefs = ({
