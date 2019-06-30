@@ -2,12 +2,14 @@ from PyQt5.QtWidgets import QWidget, QTabWidget, QMainWindow
 from .searchWindow import SearchWindow
 from .accountSearchWindow import AccountSearchWindow
 from .loanSearchWindow import LoanSearchWindow
+from .statisticWindow import StatisticWindow
 
 from API.subbank import subbank_add, subbank_delete, subbank_update, subbank_search
 from API.employee import employee_add, employee_delete, employee_update, employee_search
 from API.client import client_add, client_delete, client_update, client_search
 from API.account import account_add, account_delete, account_update, account_search, own_account
 from API.loan import loan_add, loan_delete, loan_search, fund_add, take_loan
+from API.statistic import statistic_search
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -168,6 +170,10 @@ class MainWindow(QMainWindow):
         })
         self.loanTab = LoanSearchWindow(loanColumnDefs, loan_search, loan_delete, loan_add, fund_add, take_loan)
         tabs.addTab(self.loanTab, "贷款管理")
+
+        self.statisticTab = StatisticWindow(statistic_search)
+        tabs.addTab(self.statisticTab, "业务统计")
+
         # QTabWidget的控件大小
         tabs.resize(900, 800) 
         # 主窗体的大小

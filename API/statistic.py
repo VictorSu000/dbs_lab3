@@ -7,11 +7,15 @@ def statistic_search(conditions):
         :conditions: business class and time interval
     """
     db = getDB()
+
+    print(conditions)
+
     try:
         cur = db.cursor()
         date_cmp = f"date_add(日期,interval str_to_date(\'{conditions[1]['condition']}\','%Y-%m-%d') YEAR_MONTH) > date_format(now(),'%Y-%m-%d')"
-        
-        if(conditions[0]['name']=='储蓄'):
+        print(date_cmp)
+
+        if(conditions[0]['condition']=='储蓄'):
             sql = f"SELECT 支行,业务总金额,用户数 from (SELECT 支行,SUM(金额) as 业务总金额 from 储蓄业务 where {date_cmp}) t1," + \
                 f"(SELECT 支行名,COUNT(distinct 身份证号) as 用户数 from 账户,拥有账户 where 账户.账户号 = 拥有账户.账户号 and date_add(最近访问日期,interval \'{conditions[1]['condition']}'\' YEAR_MONTH) > date_format(now(),'%Y-%m-%d')) t2 "+ \
                 "where t1.支行 = t2.支行名"

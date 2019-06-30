@@ -76,4 +76,5 @@ class InputDataWindow(QWidget):
             showWarningWindow(self, e)
             return
         
-        self.okCallback(okCallbackData) or self.close()
+        self.okCallback(okCallbackData)
+        self.close()
