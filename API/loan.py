@@ -30,7 +30,7 @@ def loan_delete(data):
 
     try:
         cur = db.cursor()
-
+        data = data + [""]
         cur.callproc('loan_delete', data)
 
         cur.execute("select @_loan_delete_1")
