@@ -50,7 +50,7 @@ class StatisticWindow(QWidget):
             "condition": self.serviceComboBox.currentText(),
         }, {
             "name": "时间",
-            "condition": f"{self.yearComboBox.currentText()}-{self.monthComboBox.currentText()}-0",
+            "condition": f"{self.yearComboBox.currentText()}-{self.monthComboBox.currentText()}",
         })
         result = self.statistic_search(data)
         print(result)
