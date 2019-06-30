@@ -50,20 +50,20 @@ class SearchWindow(QWidget):
         grid.addWidget(self.table, line, 0, tableHeight, 0)
         line += tableHeight
 
-        offset = len(self.additionalButtons)
-        buttons = self.additionalButtons
-        buttons += [ QPushButton(text) for text in ("查询", "新增", "删除") ]
+        self.offset = len(self.additionalButtons)
+        self.buttons = self.additionalButtons
+        self.buttons += [ QPushButton(text) for text in ("查询", "新增", "删除") ]
         if self.showUpdateButton:
-            buttons.append(QPushButton("修改"))
+            self.buttons.append(QPushButton("修改"))
 
-        for i in range(len(buttons)):
-            grid.addWidget(buttons[i], line, i + 2)
+        for i in range(len(self.buttons)):
+            grid.addWidget(self.buttons[i], line, i + 2)
         
-        buttons[offset].clicked.connect(self.searchData)
-        buttons[offset + 1].clicked.connect(self.showAddWindow)
-        buttons[offset + 2].clicked.connect(self.deleteLine)
+        self.buttons[self.offset].clicked.connect(self.searchData)
+        self.buttons[self.offset + 1].clicked.connect(self.showAddWindow)
+        self.buttons[self.offset + 2].clicked.connect(self.deleteLine)
         if self.showUpdateButton:
-            buttons[offset + 3].clicked.connect(self.showModifyWindow)
+            self.buttons[self.offset + 3].clicked.connect(self.showModifyWindow)
         self.setLayout(grid)
 
     def searchData(self):
@@ -158,3 +158,10 @@ class SearchWindow(QWidget):
         presetData = [self.table.item(currentRow, col).text() for col in range(self.table.columnCount())]
         self.modifyWindow = InputDataWindow(self.columnDefs, presetData, lambda data:self.modifyData(currentRow, data))
         self.modifyWindow.show()
+
+    def toggleButtons(self, ignoreButtonIndexes):
+        # 切换按钮（查询、新增、删除、修改）的状态（可用<->不可用）
+        # ignoreButtonIndexes 不切换的按钮index
+        for index in range(len(self.buttons)):
+            if index not in ignoreButtonIndexes:
+                self.buttons[index].setEnabled(not self.buttons[index].isEnabled())

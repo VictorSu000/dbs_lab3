@@ -7,8 +7,8 @@ from .statisticWindow import StatisticWindow
 from API.subbank import subbank_add, subbank_delete, subbank_update, subbank_search
 from API.employee import employee_add, employee_delete, employee_update, employee_search
 from API.client import client_add, client_delete, client_update, client_search
-from API.account import account_add, account_delete, account_update, account_search, own_account
-from API.loan import loan_add, loan_delete, loan_search, fund_add, take_loan
+from API.account import account_add, account_delete, account_update, account_search, own_account, own_search
+from API.loan import loan_add, loan_delete, loan_search, fund_add, take_loan, fund_search, take_loan_search
 from API.statistic import statistic_search
 
 class MainWindow(QMainWindow):
@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
             "isPK": False,
             "type": "number",
         })
-        self.accountTab = AccountSearchWindow(accountColumnDefs, account_search, account_update, account_delete, account_add, own_account)
+        self.accountTab = AccountSearchWindow(accountColumnDefs, account_search, account_update, account_delete, account_add, own_account, own_search)
         tabs.addTab(self.accountTab, "账户管理")
 
         loanColumnDefs = ({
@@ -161,14 +161,14 @@ class MainWindow(QMainWindow):
         }, {
             "name": "状态",
             "isPK": False,
-            "candidates": ["未开始发放", "发放中", "已全部发放"],
+            "candidates": ["未开始发放"],
             "type": "string",
         }, {
             "name": "负责人身份证号",
             "isPK": False,
             "type": "string",
         })
-        self.loanTab = LoanSearchWindow(loanColumnDefs, loan_search, loan_delete, loan_add, fund_add, take_loan)
+        self.loanTab = LoanSearchWindow(loanColumnDefs, loan_search, loan_delete, loan_add, fund_add, take_loan, fund_search, take_loan_search)
         tabs.addTab(self.loanTab, "贷款管理")
 
         self.statisticTab = StatisticWindow(statistic_search)
