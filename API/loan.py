@@ -134,10 +134,42 @@ def loan_search(conditions):
         print(e)
         raise Exception("查询格式错误！")
 
+def fund_search(data):
+    r"""
+            :param conditions: a tuple only contains 贷款号 
+    """
+    db = getDB()
+    try:
+        cur = db.cursor()
+
+        sql = "SELECT 贷款号,款项号,日期,金额 from 款项 where 贷款号=" + data[0]
+    
+        cur.execute(sql)
+        return cur.fetchall()
+    except Exception as e:
+        print(e)
+        raise Exception("查询格式错误！")
+
+def take_loan_search(data):
+    r"""
+            :param conditions: a tuple only contains 贷款号 
+    """
+    db = getDB()
+    try:
+        cur = db.cursor()
+
+        sql = "SELECT 贷款号,身份证号 from 借贷 where 贷款号=" + data[0]
+    
+        cur.execute(sql)
+        return cur.fetchall()
+    except Exception as e:
+        print(e)
+        raise Exception("查询格式错误！")
+
 if __name__ == '__main__':
     try:
+        #print(take_loan_search(['DK01']))
         pass
-
         # 实例data，具体请参考函数注释
         # cur.callproc('loan_add', ('DK02', '龙兴', 50000, '未开始发放'))
         # db.commit()

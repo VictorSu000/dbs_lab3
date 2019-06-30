@@ -149,8 +149,21 @@ def account_search(conditions):
         print(e)
         raise Exception("查询格式错误！")
 
-def own_search(condition):
-    pass
+def own_search(data):
+    r"""
+            :param conditions: a tuple only contains 账户号 
+    """
+    db = getDB()
+    try:
+        cur = db.cursor()
+
+        sql = "SELECT 账户号,身份证号,最近访问日期 from 拥有账户 where 账户号=" + data[0]
+    
+        cur.execute(sql)
+        return cur.fetchall()
+    except Exception as e:
+        print(e)
+        raise Exception("查询格式错误！")
 
 if __name__ == '__main__':
     try:
