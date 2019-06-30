@@ -20,7 +20,7 @@ def client_add(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception('添加客户失败！')
 
 
 def client_delete(data):
@@ -39,7 +39,7 @@ def client_delete(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception('删除客户失败！')
 
 
 def client_update(data):
@@ -63,7 +63,7 @@ def client_update(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception('更新客户信息失败!')
 
 
 def client_search(conditions):

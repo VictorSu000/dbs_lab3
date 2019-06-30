@@ -19,7 +19,7 @@ def loan_add(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception('添加贷款失败！')
 
 
 def loan_delete(data):

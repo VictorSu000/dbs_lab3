@@ -34,7 +34,7 @@ def account_add(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception('添加账户失败！')
 
 def account_update(data):
     r"""
@@ -59,7 +59,7 @@ def account_update(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception('修改账户信息失败!')
 
 
 def account_delete(data):
@@ -78,7 +78,7 @@ def account_delete(data):
     except Exception as e:
         print(e)
         db.rollback()
-        raise e
+        raise Exception('注销账户失败!')
 
 
 def own_account(data):
